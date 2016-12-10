@@ -45,7 +45,7 @@ public class InventoryBox {
 		this.sprite.draw(batch);
 		
 		if(this.getItem() != null){
-			this.getItem().getIcon().setSize(24, 24);
+			this.getItem().getIcon().setSize(24/2, 24/2);
 			this.getItem().getIcon().setPosition(this.position.x + this.getItem().getIcon().getWidth() / 2, this.position.y + this.getItem().getIcon().getHeight() / 2);
 			this.getItem().getIcon().draw(batch);
 		}

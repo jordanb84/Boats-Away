@@ -38,9 +38,14 @@ public class Inventory {
 			box.render(batch, box == this.selectedSlot);
 			slotIndex++;
 		}
-		
-		Text.Default.FONT.draw(batch, "Inventory | Click an item", this.position.x + this.slots.size() * this.getSelectedItem().getIcon().getWidth() / 2 - 16, this.position.y + this.getSelectedItem().getIcon().getHeight() * 2.8f);
-	}
+	
+		try{
+			Text.Default.FONT.draw(batch, "Inventory | Click an item", this.position.x + this.slots.size() * this.getSelectedItem().getIcon().getWidth() / 2 - 16, this.position.y + this.getSelectedItem().getIcon().getHeight() * 2.8f);
+		}
+			catch(NullPointerException e){
+			
+		}
+		}
 	
 	public void update(OrthographicCamera camera){
 		for(InventoryBox box : this.slots){
