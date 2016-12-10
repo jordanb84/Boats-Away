@@ -11,6 +11,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ld.game.state.StateManager;
 import com.ld.game.state.impl.StateTesting;
 
@@ -21,6 +22,9 @@ public class Game extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	
 	private StateManager stateManager;
+	
+	public static ShapeRenderer shape;
+	public static boolean globalDebug;
 	
 	@Override
 	public void create(){
@@ -35,6 +39,8 @@ public class Game extends ApplicationAdapter {
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			e.printStackTrace();
 		}
+		
+		shape = new ShapeRenderer();
 	}
 	
 	@Override
@@ -47,6 +53,10 @@ public class Game extends ApplicationAdapter {
 		this.batch.begin();
 		this.stateManager.render(this.batch);
 		this.batch.end();
+		
+		if(this.globalDebug){
+			this.shape.setProjectionMatrix(this.batch.getProjectionMatrix());
+		}
 		
 		System.out.println(Gdx.graphics.getFramesPerSecond());
 	}
