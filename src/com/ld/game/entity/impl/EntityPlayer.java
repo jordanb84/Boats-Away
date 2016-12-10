@@ -1,5 +1,7 @@
 package com.ld.game.entity.impl;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,6 +14,7 @@ import com.ld.game.entity.Direction;
 import com.ld.game.entity.EntityLiving;
 import com.ld.game.graphics.map.Map;
 import com.ld.game.item.Inventory;
+import com.ld.game.item.impl.ItemLog;
 import com.ld.game.tile.Tile;
 import com.ld.game.tile.TileType;
 
@@ -89,6 +92,7 @@ public class EntityPlayer extends EntityLiving {
 					
 					if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
 						tile.setNewType(TileType.Grass);
+						inventory.addItem(new ItemLog(1), new Random().nextInt(3));
 					}
 				}else{
 					tile.getCurrentSprite().setAlpha(1f);

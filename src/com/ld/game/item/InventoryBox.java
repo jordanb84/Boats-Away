@@ -51,11 +51,11 @@ public class InventoryBox {
 		}
 		
 		if(this.getItem() != null){
-			//Text.Example.FONT.draw(batch, "" + this.getItem().getAmount(), this.position.x + this.getSprite().getWidth() / 8, this.position.y + this.getItem().getIcon().getHeight() * 1.5f);
+			Text.Default.FONT.draw(batch, "" + this.getItem().getAmount(), this.position.x + this.getSprite().getWidth() / 8, this.position.y + this.getItem().getIcon().getHeight() * 1.5f);
 		}
 		
 		if(this.isHovered() && this.getItem() != null){
-			//Text.Example.FONT.draw(batch, "" + this.getItem().getDescription(), this.position.x + this.getSprite().getWidth() / 2, this.position.y);
+			Text.Default.FONT.draw(batch, "" + this.getItem().getDescription(), this.position.x + this.getSprite().getWidth() / 2, this.position.y);
 		}
 	}
 	

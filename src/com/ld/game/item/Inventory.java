@@ -39,7 +39,7 @@ public class Inventory {
 			slotIndex++;
 		}
 		
-		//Text.Example.FONT.draw(batch, "Inventory | Click an item", this.position.x + this.slots.size() * this.getSelectedItem().getIcon().getWidth() / 2 - 16, this.position.y + this.getSelectedItem().getIcon().getHeight() * 2.8f);
+		Text.Default.FONT.draw(batch, "Inventory | Click an item", this.position.x + this.slots.size() * this.getSelectedItem().getIcon().getWidth() / 2 - 16, this.position.y + this.getSelectedItem().getIcon().getHeight() * 2.8f);
 	}
 	
 	public void update(OrthographicCamera camera){
@@ -58,6 +58,7 @@ public class Inventory {
 	
 	public void addItem(InventoryItem item, int amount){
 		boolean added = false;
+		try{
 		for(InventoryBox box : this.slots){
 			if(!added){
 				if(box.getItem().getClass() == item.getClass()){
@@ -66,14 +67,20 @@ public class Inventory {
 				}
 			}
 		}
+		}catch(NullPointerException e){
+			
+		}
 		
 		if(!added){
 			for(InventoryBox box : this.slots){
 				if(box.getItem() == null){
 					box.setItem(item);
+					item.addAmount(amount);
+					break;
 				}
 			}
 		}
+		
 	}
 	
 }
