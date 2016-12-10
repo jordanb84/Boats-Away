@@ -45,7 +45,7 @@ public class EntityPlayer extends EntityLiving {
 		
 		this.toolShackInventory = new ToolShackInventory(new Vector2(150, 230));
 		
-		this.shopInventory = new ShopInventory(this.toolShackInventory);
+		this.shopInventory = new ShopInventory(map, this.toolShackInventory);
 	}
 
 	@Override

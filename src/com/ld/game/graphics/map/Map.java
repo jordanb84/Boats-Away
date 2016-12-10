@@ -24,6 +24,8 @@ public class Map {
 
 	private List<EntityLiving> entities = new ArrayList<EntityLiving>();
 	
+	private List<EntityLiving> entitySpawnQueue = new ArrayList<EntityLiving>();
+	
 	private List<Tile> tiles;
 	
 	public Map(File mapFile) throws SAXException, IOException, ParserConfigurationException{
@@ -43,6 +45,11 @@ public class Map {
 	}
 	
 	public void update(OrthographicCamera camera){
+		for(EntityLiving entity : this.entitySpawnQueue){
+			this.entities.add(entity);
+		}
+		this.entitySpawnQueue.clear();
+		
 		for(Tile tile : this.getTiles()){
 			tile.update(camera);
 		}
@@ -53,7 +60,7 @@ public class Map {
 	}
 	
 	public void spawnEntity(EntityLiving entity){
-		this.entities.add(entity);
+		this.entitySpawnQueue.add(entity);
 	}
 	
 	public List<Tile> generateTileListFromXml(File file) throws SAXException, IOException, ParserConfigurationException{
