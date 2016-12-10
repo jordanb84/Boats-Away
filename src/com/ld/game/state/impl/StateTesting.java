@@ -20,14 +20,10 @@ public class StateTesting extends State {
 
 	private Map map;
 	
-	private Inventory inventory;
-	
 	public StateTesting(StateManager stateManager) throws SAXException, IOException, ParserConfigurationException {
 		super(stateManager);
 		this.map = new Map(new File("/home/oprsec/Desktop/aaaasprites/new/forestlake3.xml"));
 		this.map.spawnEntity(new EntityPlayer(this.map, new Vector2(100, 100)));
-		
-		this.inventory = new Inventory(10);
 	}
 
 	@Override
@@ -38,13 +34,11 @@ public class StateTesting extends State {
 	@Override
 	public void render(SpriteBatch batch) {
 		this.map.render(batch);
-		this.inventory.render(batch);
 	}
 
 	@Override
 	public void update(OrthographicCamera camera) {
 		this.map.update(camera);
-		this.inventory.update(camera);
 	}
 
 }

@@ -5,17 +5,23 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ld.game.entity.Direction;
 import com.ld.game.entity.EntityLiving;
 import com.ld.game.graphics.map.Map;
+import com.ld.game.item.Inventory;
 import com.ld.game.tile.Tile;
 import com.ld.game.tile.TileType;
 
 public class EntityPlayer extends EntityLiving {
 
 	private Map map;
+	
+	private Sprite dialogBreakTree;
+	
+	private Inventory inventory;
 	
 	public EntityPlayer(Map map, Vector2 position) {
 		super(map, position);
@@ -27,6 +33,11 @@ public class EntityPlayer extends EntityLiving {
 		this.setCurrentSprite(Direction.DOWN.name());
 		
 		this.map = map;
+		
+		this.dialogBreakTree = new Sprite(new Texture(Gdx.files.internal("assets/dialog_breaktree.png")));
+		this.dialogBreakTree.setAlpha(0.7f);
+		
+		this.inventory = new Inventory(10);
 	}
 
 	@Override
@@ -46,17 +57,41 @@ public class EntityPlayer extends EntityLiving {
 			this.move(movementSpeed, Direction.LEFT, true, true);
 		}
 		
-		this.checkForBreakableBlocks(TileType.Tree);
+		//this.checkForBreakableBlocks(batch, TileType.Tree);
+		
+		this.inventory.update(camera);
 	}
 	
-	public void checkForBreakableBlocks(TileType type){
+	@Override
+	public void render(SpriteBatch batch){
+		super.render(batch);
+		this.checkForBreakableBlocks(batch, TileType.Tree);
+		
+		this.inventory.render(batch);
+	}
+	
+	public void checkForBreakableBlocks(SpriteBatch batch, TileType type){
 		for(Tile tile : this.map.getTiles()){
 			if(tile.getTileType() == type){
-				Rectangle playerRectangle = new Rectangle(this.getPosition().x - 16 * 2, this.getPosition().y, this.getCurrentSprite().getWidth() + 16 * 2, this.getCurrentSprite().getHeight());
+				Rectangle playerRectangle = new Rectangle(this.getPosition().x, this.getPosition().y, this.getCurrentSprite().getWidth() + 48 / 4, 1);
+				playerRectangle.x -= playerRectangle.getWidth() / 2;
+				/**ShapeRenderer shape = new ShapeRenderer();
+				shape.setProjectionMatrix(batch.getProjectionMatrix());
+				shape.setAutoShapeType(true);
+				shape.begin();
+				shape.rect(playerRectangle.getX(), playerRectangle.getY(), playerRectangle.getWidth(), playerRectangle.getHeight());
+				shape.circle(this.getPosition().x, this.getPosition().y, 10);
+				shape.end();**/
 				if(playerRectangle.overlaps(tile.getRectangle())){
-					//tile.getCurrentSprite().setAlpha(0.9f);
+					tile.getCurrentSprite().setAlpha(0.9f);
+					this.dialogBreakTree.setPosition(this.getPosition().x - this.dialogBreakTree.getWidth() / 4, this.getPosition().y + this.getCurrentSprite().getHeight() + 1.2f);
+					this.dialogBreakTree.draw(batch);
+					
+					if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
+						tile.setNewType(TileType.Grass);
+					}
 				}else{
-					//tile.getCurrentSprite().setAlpha(1f);
+					tile.getCurrentSprite().setAlpha(1f);
 				}
 			}
 		}

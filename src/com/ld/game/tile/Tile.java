@@ -36,6 +36,13 @@ public class Tile extends Entity {
 			this.getTileType().tileAction.update(camera, this);
 		}
 	}
+	
+	public void setNewType(TileType newType){
+		this.setTileType(newType);
+		this.getSprites().remove("default");
+		this.getSprites().put("default", new Sprite(new Texture(Gdx.files.internal("assets/" + newType.mapFileName + ".png"))));
+		this.setCurrentSprite("default");
+	}
 
 	public TileType getTileType() {
 		return tileType;
