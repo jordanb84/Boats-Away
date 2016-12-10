@@ -12,11 +12,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Inventory {
 
-	private List<InventoryBox> slots = new ArrayList<InventoryBox>();
+	protected List<InventoryBox> slots = new ArrayList<InventoryBox>();
 	
-	private Vector2 position;
+	protected Vector2 position;
 	
-	private InventoryBox selectedSlot;
+	protected InventoryBox selectedSlot;
 	
 	public Inventory(int slotsWidth){
 		Sprite boxSprite = new Sprite(new Texture("assets/slot.png"));
@@ -27,7 +27,7 @@ public class Inventory {
 			this.slots.add(new InventoryBox(this, boxSprite, null, new Vector2(this.position.x + slotsAdded * boxSprite.getWidth(), this.position.y)));
 		}
 		
-		this.selectedSlot = this.slots.get(0);
+		//this.selectedSlot = this.slots.get(0);
 	}
 	
 	//draw "Tap a slot to select an item!"
@@ -86,6 +86,22 @@ public class Inventory {
 			}
 		}
 		
+	}
+	
+	public void removeItem(InventoryItem item, int amount){
+		int itemsRemoved = 0;
+		
+		for(InventoryBox box : this.slots){
+			if(box.getItem() != null){
+				if(box.getItem().getClass() == item.getClass()){
+					itemsRemoved += (box.getAmount());
+					box.setAmount(box.getAmount() - amount);
+					if(box.getAmount() < 1){
+						box.setItem(null);
+					}
+				}
+			}
+		}
 	}
 	
 }

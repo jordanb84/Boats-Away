@@ -62,4 +62,8 @@ public abstract class InventoryItem {
 		this.description = description;
 	}
 	
+	public void setAmount(int amount){
+		this.amount = amount;
+	}
+	
 }

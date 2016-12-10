@@ -1,19 +1,20 @@
 package com.ld.game.entity.impl;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ld.game.entity.Direction;
 import com.ld.game.entity.EntityLiving;
 import com.ld.game.graphics.map.Map;
 import com.ld.game.item.Inventory;
+import com.ld.game.item.ShopInventory;
+import com.ld.game.item.ToolShackInventory;
 import com.ld.game.item.impl.ItemLog;
 import com.ld.game.tile.Tile;
 import com.ld.game.tile.TileType;
@@ -24,7 +25,9 @@ public class EntityPlayer extends EntityLiving {
 	
 	private Sprite dialogBreakTree;
 	
-	private Inventory inventory;
+	private ToolShackInventory toolShackInventory;
+	
+	private ShopInventory shopInventory;
 	
 	public EntityPlayer(Map map, Vector2 position) {
 		super(map, position);
@@ -40,7 +43,9 @@ public class EntityPlayer extends EntityLiving {
 		this.dialogBreakTree = new Sprite(new Texture(Gdx.files.internal("assets/dialog_breaktree.png")));
 		this.dialogBreakTree.setAlpha(0.7f);
 		
-		this.inventory = new Inventory(10);
+		this.toolShackInventory = new ToolShackInventory(new Vector2(150, 230));
+		
+		this.shopInventory = new ShopInventory(this.toolShackInventory);
 	}
 
 	@Override
@@ -62,7 +67,8 @@ public class EntityPlayer extends EntityLiving {
 		
 		//this.checkForBreakableBlocks(batch, TileType.Tree);
 		
-		this.inventory.update(camera);
+		this.toolShackInventory.update(camera);
+		this.shopInventory.update(camera);
 	}
 	
 	@Override
@@ -70,7 +76,8 @@ public class EntityPlayer extends EntityLiving {
 		super.render(batch);
 		this.checkForBreakableBlocks(batch, TileType.Tree);
 		
-		this.inventory.render(batch);
+		this.toolShackInventory.render(batch);
+		this.shopInventory.render(batch);
 	}
 	
 	public void checkForBreakableBlocks(SpriteBatch batch, TileType type){
@@ -92,7 +99,8 @@ public class EntityPlayer extends EntityLiving {
 					
 					if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
 						tile.setNewType(TileType.Grass);
-						inventory.addItem(new ItemLog(1), new Random().nextInt(3));
+						//inventory.addItem(new ItemLog(1), new Random().nextInt(3));
+						this.toolShackInventory.addItem(new ItemLog(1), MathUtils.random(1, 4));
 					}
 				}else{
 					tile.getCurrentSprite().setAlpha(1f);

@@ -13,7 +13,7 @@ public class InventoryBox {
 
 	private InventoryItem item;
 	
-	private Sprite sprite;
+	protected Sprite sprite;
 	
 	private Rectangle mouseRectangle;
 	
@@ -25,6 +25,8 @@ public class InventoryBox {
 	
 	private Inventory inventory;
 	
+	private boolean unclickable;
+	
 	public InventoryBox(Inventory inventory, Sprite sprite, InventoryItem item, Vector2 position){
 		this.setItem(item);
 		this.sprite = sprite;
@@ -35,7 +37,7 @@ public class InventoryBox {
 	public void render(SpriteBatch batch, boolean selected){
 		this.sprite.setPosition(position.x, position.y);
 		if(!this.hovered){
-			this.sprite.setAlpha(.5f);
+			this.sprite.setAlpha(.6f);
 		}else{
 			this.sprite.setAlpha(.7f);
 		}
@@ -51,7 +53,7 @@ public class InventoryBox {
 		}
 		
 		if(this.getItem() != null){
-			Text.Default.FONT.draw(batch, "" + this.getItem().getAmount(), this.position.x + this.getSprite().getWidth() / 8, this.position.y + this.getItem().getIcon().getHeight() * 1.5f);
+			//Text.Default.FONT.draw(batch, "" + this.getItem().getAmount(), this.position.x + this.getSprite().getWidth() / 8, this.position.y + this.getItem().getIcon().getHeight() * 1.5f);
 		}
 		
 		if(this.isHovered() && this.getItem() != null){
@@ -78,7 +80,12 @@ public class InventoryBox {
 			this.setHovered(true);
 			
 			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-				this.inventory.select(this);
+				if(!this.unclickable){
+					this.onUse();
+					this.unclickable = true;
+				}
+			}else{
+				this.unclickable = false;
 			}
 		}else{
 			this.setHovered(false);
@@ -115,4 +122,23 @@ public class InventoryBox {
 		this.getItem().addAmount(amount);
 	}
 	
+	public Vector2 getPosition(){
+		return this.position;
+	}
+	
+	public void setPosition(Vector2 position){
+		this.position = position;
+	}
+	
+	public void onUse(){
+		this.inventory.select(this);
+	}
+	
+	public void setAmount(int amount){
+		this.getItem().setAmount(amount);
+	}
+	
+	public int getAmount(){
+		return this.getItem().getAmount();
+	}
 }
