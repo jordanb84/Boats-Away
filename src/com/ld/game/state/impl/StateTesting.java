@@ -24,9 +24,9 @@ public class StateTesting extends State {
 	
 	public StateTesting(StateManager stateManager) throws SAXException, IOException, ParserConfigurationException {
 		super(stateManager);
-		this.map = new Map(new File("/home/oprsec/Desktop/aaaasprites/test3.xml"));
+		this.map = new Map(new File("/home/oprsec/Music/test4.xml"));
 		
-		EntityPlayer player = new EntityPlayer(this.map, new Vector2(100, 100));
+		EntityPlayer player = new EntityPlayer(this.map, new Vector2(100, 90));
 		this.map.spawnEntity(player);
 		
 		this.map.spawnEntity(new BuildingBarracks(this.map, new Vector2(50, 40), player.getInventory()));

@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ld.game.state.StateManager;
-import com.ld.game.state.impl.StateTesting;
+import com.ld.game.state.impl.StateIntro;
 
 public class Game extends ApplicationAdapter {
 
@@ -34,11 +34,7 @@ public class Game extends ApplicationAdapter {
 		this.batch = new SpriteBatch();
 		
 		this.stateManager = new StateManager(this.camera);
-		try {
-			this.stateManager.setState(new StateTesting(this.stateManager));
-		} catch (SAXException | IOException | ParserConfigurationException e) {
-			e.printStackTrace();
-		}
+		this.stateManager.setState(new StateIntro(this.stateManager, this.camera));
 		
 		shape = new ShapeRenderer();
 	}

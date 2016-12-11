@@ -33,10 +33,14 @@ public class Map {
 	
 	private float elapsedSinceLastSpawn;
 	
+	private TimeManager clock;
+	
 	public Map(File mapFile) throws SAXException, IOException, ParserConfigurationException{
 		this.setTiles(this.generateTileListFromXml(mapFile));
 		
 		System.out.println("Loaded " + this.tiles.size() + " tiles");
+		
+		this.clock = new TimeManager(0.7f, 0.3f);
 	}
 
 	public void render(SpriteBatch batch){
@@ -47,6 +51,8 @@ public class Map {
 		for(EntityLiving entity : this.entities){
 			entity.render(batch);
 		}
+		
+		//this.clock.render(batch);
 	}
 	
 	public void update(OrthographicCamera camera){
@@ -79,10 +85,12 @@ public class Map {
 			}
 			
 			if(pigCount <= 3){
-				this.spawnEntity(new EntityPig(this, new Vector2(150, 280)));
+				this.spawnEntity(new EntityPig(this, new Vector2(150, 270)));
 				this.elapsedSinceLastSpawn = 0;
 			}
 		}
+		
+		this.clock.update();
 	}
 	
 	public void spawnEntity(EntityLiving entity){

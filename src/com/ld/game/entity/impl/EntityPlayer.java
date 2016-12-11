@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.ld.game.Game;
 import com.ld.game.entity.Direction;
 import com.ld.game.entity.EntityLiving;
 import com.ld.game.entity.animation.Animation;
@@ -150,17 +151,6 @@ public class EntityPlayer extends EntityLiving {
 				}
 			}
 			
-			if(tile.getTileType() == TileType.WheatPlanted){
-				if(overlaps){
-					Text.Small.FONT.draw(batch, "It's growing! Not done yet, though", tile.getPosition().x, tile.getPosition().y);
-				}
-			}
-			
-			if(tile.getTileType() == TileType.Rock && overlaps){
-				Text.Small.FONT.draw(batch, "Huh. It's a rock. You'll", tile.getPosition().x-5, tile.getPosition().y);
-				Text.Small.FONT.draw(batch, "need slaves to collect it", tile.getPosition().x-5, tile.getPosition().y - 16);
-			}
-			
 			if(tile.getTileType() == TileType.WheatGrowing){
 				if(overlaps){
 					Text.Small.FONT.draw(batch, "Hey, it's done! Click to harvest wheat", tile.getPosition().x, tile.getPosition().y);
@@ -192,6 +182,8 @@ public class EntityPlayer extends EntityLiving {
 			if(tile.getTileType() == type){
 				Rectangle playerRectangle = new Rectangle(this.getPosition().x, this.getPosition().y, this.getCurrentSprite().getWidth() + 48 / 4, 1);
 				playerRectangle.x -= playerRectangle.getWidth() / 2;
+				
+				Rectangle playerRectangle2 = new Rectangle(this.getPosition().x, this.getPosition().y - this.getCurrentSprite().getHeight() / 2 - 6, 1, this.getCurrentSprite().getHeight() * 2.2f);
 				/**ShapeRenderer shape = new ShapeRenderer();
 				shape.setProjectionMatrix(batch.getProjectionMatrix());
 				shape.setAutoShapeType(true);
@@ -199,7 +191,16 @@ public class EntityPlayer extends EntityLiving {
 				shape.rect(playerRectangle.getX(), playerRectangle.getY(), playerRectangle.getWidth(), playerRectangle.getHeight());
 				shape.circle(this.getPosition().x, this.getPosition().y, 10);
 				shape.end();**/
-				if(playerRectangle.overlaps(tile.getRectangle())){
+				/**Game.globalDebug = true;
+				Game.shape.setAutoShapeType(true);
+				Game.shape.begin();
+				Game.shape.setProjectionMatrix(batch.getProjectionMatrix());
+				Game.shape.rect(playerRectangle.getX(), playerRectangle.getY(), playerRectangle.getWidth(), playerRectangle.getHeight());
+				Game.shape.circle(this.getPosition().x, this.getPosition().y, 10);
+				Game.shape.rect(playerRectangle2.getX(), playerRectangle2.getY(), playerRectangle2.getWidth(), playerRectangle2.getHeight());
+				Game.shape.end();**/
+				System.out.println(Gdx.graphics.getFramesPerSecond());
+				if(playerRectangle.overlaps(tile.getRectangle()) || playerRectangle2.overlaps(tile.getRectangle())){
 					tile.getCurrentSprite().setAlpha(0.9f);
 					this.dialogBreakTree.setPosition(this.getPosition().x - this.dialogBreakTree.getWidth() / 4, this.getPosition().y + this.getCurrentSprite().getHeight() * 1.2f);
 					this.dialogBreakTree.draw(batch);
@@ -212,7 +213,7 @@ public class EntityPlayer extends EntityLiving {
 							this.toolShackInventory.addItem(new ItemSeeds(1), 1);
 						}
 						
-						tile.setNewType(TileType.Rock);
+						//tile.setNewType(TileType.Rock);
 						//this.map.spawnEntity(new EntityRock(this.map, new Vector2(tile.getPosition().x, tile.getPosition().y)));
 					}
 				}else{

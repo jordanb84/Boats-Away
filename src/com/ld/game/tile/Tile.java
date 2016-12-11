@@ -5,14 +5,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.ld.game.entity.Entity;
+import com.ld.game.item.Text;
 
 public class Tile extends Entity {
 
 	private TileType tileType;
 	
 	private float cropGrowthElapsed;
+	
+	private boolean hovered;
 	
 	public Tile(TileType type, Vector2 position) {
 		super(position);
@@ -30,6 +35,10 @@ public class Tile extends Entity {
 		if(this.getTileType().tileAction != null){
 			this.getTileType().tileAction.render(batch, this);
 		}
+		
+		if(this.tileType.tooltip != null && this.hovered){
+			Text.Small.FONT.draw(batch, this.tileType.tooltip, this.getPosition().x, this.getPosition().y);
+		}
 	}
 	
 	@Override
@@ -45,6 +54,11 @@ public class Tile extends Entity {
 				this.setNewType(TileType.WheatGrowing);
 			}
 		}
+		
+		Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(mouse);
+		
+		this.hovered = (this.getRectangle().overlaps(new Rectangle(mouse.x, mouse.y, 1, 1)));
 	}
 	
 	public void setNewType(TileType newType){
