@@ -25,9 +25,9 @@ public class EntityPlayer extends EntityLiving {
 	
 	private Sprite dialogBreakTree;
 	
-	private ToolShackInventory toolShackInventory;
+	protected ToolShackInventory toolShackInventory;
 	
-	private ShopInventory shopInventory;
+	//private ShopInventory shopInventory;
 	
 	public EntityPlayer(Map map, Vector2 position) {
 		super(map, position);
@@ -45,7 +45,7 @@ public class EntityPlayer extends EntityLiving {
 		
 		this.toolShackInventory = new ToolShackInventory(new Vector2(150, 230));
 		
-		this.shopInventory = new ShopInventory(map, this.toolShackInventory);
+		//this.shopInventory = new ShopInventory(map, this.toolShackInventory);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class EntityPlayer extends EntityLiving {
 		//this.checkForBreakableBlocks(batch, TileType.Tree);
 		
 		this.toolShackInventory.update(camera);
-		this.shopInventory.update(camera);
+		//this.shopInventory.update(camera);
 	}
 	
 	@Override
@@ -77,7 +77,7 @@ public class EntityPlayer extends EntityLiving {
 		this.checkForBreakableBlocks(batch, TileType.Tree);
 		
 		this.toolShackInventory.render(batch);
-		this.shopInventory.render(batch);
+		//this.shopInventory.render(batch);
 	}
 	
 	public void checkForBreakableBlocks(SpriteBatch batch, TileType type){
@@ -114,4 +114,7 @@ public class EntityPlayer extends EntityLiving {
 		return null;
 	}
 
+	public ToolShackInventory getInventory(){
+		return this.toolShackInventory;
+	}
 }

@@ -1,9 +1,11 @@
 package com.ld.game.entity;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ld.game.ai.mind.EntityMind;
+import com.ld.game.entity.building.EntityBuilding;
 import com.ld.game.graphics.map.Map;
 import com.ld.game.tile.Tile;
 
@@ -21,34 +23,59 @@ public abstract class EntityLiving extends Entity {
 	}
 	
 	@Override
+	public void render(SpriteBatch batch){
+		super.render(batch);
+		if(this.getMind() != null){
+			this.getMind().draw(batch);
+		}
+	}
+	
+	@Override
 	public void update(OrthographicCamera camera){
 		if(this.getMind() != null){
-			this.mind.update();
+			this.mind.update(camera);
 		}
 	}
 	
 	public boolean moveTowardPosition(float speed, Vector2 position){
+		//float forceX = 0;
+		//float forceY = 0;
+
 		Vector2 force = new Vector2();
 		
 		if(this.getPosition().x > position.x){
-			force.set(-speed, 0);
+			//forceX = -speed;
+			force.set(-speed, force.y);
+			//System.out.println("Setting x to " + forceX);
 		}
 		if(this.getPosition().x < position.y){
-			force.set(speed, 0);
+			//forceX = speed;
+			//System.out.println("Setting x to " + forceX);
+			force.set(speed, force.y);
 		}
 		
 		if(this.getPosition().y > position.y){
-			force.set(0, -speed);
+			//forceY = -speed;
+			//System.out.println("Setting y to " + forceY);
+			force.set(force.x, -speed);
 		}
 		if(this.getPosition().y < position.y){
-			force.set(0, speed);
+			//forceY = speed;
+			//System.out.println("Setting y to " + forceY);
+			force.set(force.x, speed);
 		}
 		
-		System.out.println("Force: " + force.x + "/" + force.y);
+		//System.out.println("Force: " + forceX + "/" + forceY + " position: " + this.getPosition().x + "/" + this.getPosition().y + " destination: " + position.x + "/" + position.y);
+		
 		Direction direction = (this.directionForForce(force));
+		//System.out.println("X: " + this.getPosition().x + " Y: " + this.getPosition().y);
 		
 		if(direction != null){
 			this.setCurrentSprite(this.directionForForce(force).name());
+		}
+		
+		if(force.x == 0 || force.y == 0){
+			return true;
 		}
 		
 		if(!this.tileAt(new Vector2(this.getPosition().x + force.x, this.getPosition().y + force.y))){
@@ -122,6 +149,13 @@ public abstract class EntityLiving extends Entity {
 			}
 		}
 		
+		for(EntityLiving entity : this.map.getEntities()){
+			if(entity instanceof EntityBuilding){
+				if(entity.getRectangle().overlaps(new Rectangle(position.x, position.y, this.getCurrentSprite().getWidth(), this.getCurrentSprite().getHeight()))){
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 

@@ -104,4 +104,28 @@ public class Inventory {
 		}
 	}
 	
+	public boolean hasResources(List<InventoryItem> items){
+		boolean hasResources = true;
+		for(InventoryItem item : items){
+			int itemsOfType = 0;
+			for(InventoryBox box : this.slots){
+				if(box.getItem() != null){
+					if(box.getItem().getClass() == item.getClass()){
+						itemsOfType += box.getItem().getAmount();
+					}
+				}
+			}
+			
+			if(itemsOfType < item.getAmount()){
+				hasResources = false;
+			}
+		}
+		
+		return hasResources;
+	}
+	
+	public List<InventoryBox> getSlots(){
+		return this.slots;
+	}
+	
 }

@@ -58,7 +58,7 @@ public class Game extends ApplicationAdapter {
 			this.shape.setProjectionMatrix(this.batch.getProjectionMatrix());
 		}
 		
-		System.out.println(Gdx.graphics.getFramesPerSecond());
+	//	System.out.println(Gdx.graphics.getFramesPerSecond());
 	}
 	
 }
