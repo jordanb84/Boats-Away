@@ -12,6 +12,8 @@ public class Tile extends Entity {
 
 	private TileType tileType;
 	
+	private float cropGrowthElapsed;
+	
 	public Tile(TileType type, Vector2 position) {
 		super(position);
 		this.setTileType(type);
@@ -34,6 +36,14 @@ public class Tile extends Entity {
 	public void update(OrthographicCamera camera) {
 		if(this.getTileType().tileAction != null){
 			this.getTileType().tileAction.update(camera, this);
+		}
+		
+		if(this.getTileType() == TileType.WheatPlanted){
+			this.cropGrowthElapsed += (1 * Gdx.graphics.getDeltaTime());
+			
+			if(this.cropGrowthElapsed >= 15){
+				this.setNewType(TileType.WheatGrowing);
+			}
 		}
 	}
 	

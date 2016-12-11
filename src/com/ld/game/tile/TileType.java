@@ -4,7 +4,8 @@ import com.ld.game.tile.impl.TileActionDestroyOnClick;
 
 public enum TileType {
 	Grass("grass"), Grass1("grass1"), Grass2("grass2"), Grass3("grass3"),
-	GrassDark("grassdark"), Tree("tree", true, new TileActionDestroyOnClick()), Water("water"), Water1("water1"), House("house", true), Brick("brick", true)
+	GrassDark("grassdark"), Tree("tree", true, new TileActionDestroyOnClick()), Water("water"), Water1("water1"), House("house", true), Brick("brick", true),
+	Soil("soil"), WheatPlanted("wheatplanted"), WheatGrowing("wheatgrowing"), Rock("rock", true)
 	;
 	
 	TileType(String mapFileName){

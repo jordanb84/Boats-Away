@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ld.game.ai.mind.EntityMind;
+import com.ld.game.entity.animation.EntityAnimation;
 import com.ld.game.entity.building.EntityBuilding;
+import com.ld.game.entity.impl.EntityRock;
 import com.ld.game.graphics.map.Map;
 import com.ld.game.tile.Tile;
 
@@ -17,14 +19,27 @@ public abstract class EntityLiving extends Entity {
 	
 	private EntityMind mind;
 	
+	private EntityAnimation directionalAnimation;
+	
+	private Direction direction;
+	
 	public EntityLiving(Map map, Vector2 position) {
 		super(position);
 		this.map = map;
+		this.setDirection(Direction.DOWN);
 	}
 	
 	@Override
 	public void render(SpriteBatch batch){
-		super.render(batch);
+		if(this.getDirectionalAnimation() == null){
+			this.getCurrentSprite().setPosition(this.getPosition().x, this.getPosition().y);
+			this.getCurrentSprite().draw(batch);
+		}else{
+			this.getDirectionalAnimation().getAnimation(this.getDirection()).update();
+			this.getDirectionalAnimation().getAnimation(this.getDirection()).render(batch, this.getPosition());;
+			//this.getDirectionalAnimation().render(batch, this.getPosition());
+		}
+		
 		if(this.getMind() != null){
 			this.getMind().draw(batch);
 		}
@@ -72,6 +87,7 @@ public abstract class EntityLiving extends Entity {
 		
 		if(direction != null){
 			this.setCurrentSprite(this.directionForForce(force).name());
+			this.setDirection(direction);
 		}
 		
 		if(force.x == 0 || force.y == 0){
@@ -105,6 +121,8 @@ public abstract class EntityLiving extends Entity {
 	
 	public void move(float speed, Direction direction, boolean updateAnimation, boolean checkCollision){
 		Vector2 force = new Vector2();
+		
+		this.setDirection(direction);
 		
 		switch(direction){
 		case UP:
@@ -150,7 +168,7 @@ public abstract class EntityLiving extends Entity {
 		}
 		
 		for(EntityLiving entity : this.map.getEntities()){
-			if(entity instanceof EntityBuilding){
+			if(entity instanceof EntityBuilding || entity instanceof EntityRock){
 				if(entity.getRectangle().overlaps(new Rectangle(position.x, position.y, this.getCurrentSprite().getWidth(), this.getCurrentSprite().getHeight()))){
 					return true;
 				}
@@ -175,6 +193,22 @@ public abstract class EntityLiving extends Entity {
 
 	public void setMind(EntityMind mind) {
 		this.mind = mind;
+	}
+
+	public EntityAnimation getDirectionalAnimation() {
+		return directionalAnimation;
+	}
+
+	public void setDirectionalAnimation(EntityAnimation directionalAnimation) {
+		this.directionalAnimation = directionalAnimation;
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
 	}
 
 }

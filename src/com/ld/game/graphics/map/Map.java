@@ -9,12 +9,13 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.ld.game.entity.Entity;
 import com.ld.game.entity.EntityLiving;
 import com.ld.game.entity.enemy.impl.EnemyGoblin;
+import com.ld.game.entity.impl.EntityPig;
 import com.ld.game.graphics.map.io.LoadedTileData;
 import com.ld.game.graphics.map.io.XmlMapReader;
 import com.ld.game.tile.Tile;
@@ -26,7 +27,11 @@ public class Map {
 	
 	private List<EntityLiving> entitySpawnQueue = new ArrayList<EntityLiving>();
 	
+	private List<EntityLiving> entityDespawnQueue = new ArrayList<EntityLiving>();
+	
 	private List<Tile> tiles;
+	
+	private float elapsedSinceLastSpawn;
 	
 	public Map(File mapFile) throws SAXException, IOException, ParserConfigurationException{
 		this.setTiles(this.generateTileListFromXml(mapFile));
@@ -50,6 +55,11 @@ public class Map {
 		}
 		this.entitySpawnQueue.clear();
 		
+		for(EntityLiving entity : this.entityDespawnQueue){
+			this.entities.remove(entity);
+		}
+		this.entityDespawnQueue.clear();
+		
 		for(Tile tile : this.getTiles()){
 			tile.update(camera);
 		}
@@ -57,10 +67,30 @@ public class Map {
 		for(EntityLiving entity : this.entities){
 			entity.update(camera);
 		}
+		
+		this.elapsedSinceLastSpawn += (1 * Gdx.graphics.getDeltaTime());
+		
+		if(this.elapsedSinceLastSpawn > 30f){
+			int pigCount = 0;
+			for(EntityLiving potentialPig : this.getEntities()){
+				if(potentialPig instanceof EntityPig){
+					pigCount++;
+				}
+			}
+			
+			if(pigCount <= 3){
+				this.spawnEntity(new EntityPig(this, new Vector2(150, 280)));
+				this.elapsedSinceLastSpawn = 0;
+			}
+		}
 	}
 	
 	public void spawnEntity(EntityLiving entity){
 		this.entitySpawnQueue.add(entity);
+	}
+	
+	public void despawnEntity(EntityLiving entity){
+		this.entityDespawnQueue.add(entity);
 	}
 	
 	public List<Tile> generateTileListFromXml(File file) throws SAXException, IOException, ParserConfigurationException{
