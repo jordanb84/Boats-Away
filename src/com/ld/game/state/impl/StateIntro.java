@@ -22,9 +22,11 @@ public class StateIntro extends State {
 			"You notice a small shack, trees, and some other objects.",
 			"\"How am I going to escape\", you ask. You see a boat across",
 			"the river: You need to build up an army, build a bridge and",
-			"capture that boat. Hover objects if you're not sure what they are.",
+			"capture that boat. Hover everything you can see to figure out",
+			"what you need to do.",
 			"",
-			"Good luck. Press SPACE."
+			"Good luck. Use WASD to move, E to interact. Hover objects for information.",
+			"Press SPACE to start your quest."
 	};
 	
 	private StateTesting gameState;

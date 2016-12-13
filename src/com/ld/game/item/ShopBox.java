@@ -38,7 +38,8 @@ public abstract class ShopBox extends InventoryBox {
 		this.getSprite().setSize(this.getSprite().getWidth() / 2, this.getSprite().getHeight() / 2);
 		this.deniedSprite.setSize(this.deniedSprite.getWidth() / 2, this.deniedSprite.getHeight() / 2);
 		
-		this.getReturnItem().getIcon().setSize(this.getReturnItem().getIcon().getWidth() / 2, this.getReturnItem().getIcon().getHeight() / 2);
+		//this.getReturnItem().getIcon().setSize(this.getReturnItem().getIcon().getWidth() / 2, this.getReturnItem().getIcon().getHeight() / 2);
+		this.getReturnItem().getIcon().setSize(8, 8);
 		
 		this.boxSprite = new Sprite(new Texture(Gdx.files.internal("assets/slot.png")));
 	}
@@ -52,7 +53,7 @@ public abstract class ShopBox extends InventoryBox {
 			for(InventoryItem itemPrice : this.cost){
 				cost += (itemPrice.getName() + " (" + itemPrice.getAmount() + ") ");
 			}
-			Text.Small.FONT.draw(batch, "Cost: " + cost, this.getSprite().getX(), this.getSprite().getY());
+			Text.Small.FONT.draw(batch, this.returnItem.getName() + " . " + "Cost: " + cost, this.getSprite().getX(), this.getSprite().getY());
 		}
 		
 		this.returnItem.getIcon().setPosition(this.getPosition().x + this.returnItem.getIcon().getWidth() / 2, this.getPosition().y + this.returnItem.getIcon().getHeight() / 2);
@@ -111,7 +112,15 @@ public abstract class ShopBox extends InventoryBox {
 				this.playerInventory.removeItem(item, item.getAmount());
 			}
 			
-			this.use();
+			try{
+				this.use();
+			}catch(IndexOutOfBoundsException e){
+				for(InventoryItem item : this.cost){
+					this.playerInventory.addItem(item, item.getAmount());
+				}
+				
+				this.returnItem.setName("Slave (maxed out)");
+			}
 		}
 	}
 	

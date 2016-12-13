@@ -2,7 +2,6 @@ package com.ld.game.entity.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -24,6 +23,7 @@ import com.ld.game.graphics.map.Map;
 import com.ld.game.item.InventoryItem;
 import com.ld.game.item.Text;
 import com.ld.game.item.ToolShackInventory;
+import com.ld.game.item.impl.ItemFishRaw;
 import com.ld.game.item.impl.ItemLog;
 import com.ld.game.item.impl.ItemRawPig;
 import com.ld.game.item.impl.ItemSeeds;
@@ -57,7 +57,7 @@ public class EntityPlayer extends EntityLiving {
 		this.dialogBreakTree = new Sprite(new Texture(Gdx.files.internal("assets/dialog_breaktree.png")));
 		this.dialogBreakTree.setAlpha(0.7f);
 		
-		this.toolShackInventory = new ToolShackInventory(new Vector2(150, 180));
+		this.toolShackInventory = new ToolShackInventory(new Vector2(120, 70));
 		
 		//this.shopInventory = new ShopInventory(map, this.toolShackInventory);
 		
@@ -122,7 +122,8 @@ public class EntityPlayer extends EntityLiving {
 	@Override
 	public void render(SpriteBatch batch){
 		super.render(batch);
-		this.checkForBreakableBlocks(batch, TileType.Tree);
+		this.checkForBreakableBlocks(batch, TileType.Tree, new InventoryItem[] {new ItemLog(MathUtils.random(1, 4)), new ItemSeeds(MathUtils.random(0, 1))}, TileType.Sapling);
+		this.checkForBreakableBlocks(batch, TileType.WaterFish, new InventoryItem[] {new ItemFishRaw(MathUtils.random(1, 10))}, TileType.Water);
 		
 		this.toolShackInventory.render(batch);
 		//this.shopInventory.render(batch);
@@ -170,20 +171,31 @@ public class EntityPlayer extends EntityLiving {
 			if(entity instanceof EntityBoat){
 				
 				if(overlaps){
-					Text.Small.FONT.draw(batch, "It's a boat - a way", entity.getPosition().x-5, entity.getPosition().y);
-					Text.Small.FONT.draw(batch, "to escape the island!", entity.getPosition().x-5, entity.getPosition().y - 16);
+					this.map.drawText("It's a boat -", new Vector2(entity.getPosition().x-8, entity.getPosition().y));
+					this.map.drawText("a way to", new Vector2(entity.getPosition().x-8, entity.getPosition().y - 16));
+					this.map.drawText("escape the", new Vector2(entity.getPosition().x-8, entity.getPosition().y - 32));
+					this.map.drawText("island!", new Vector2(entity.getPosition().x-8, entity.getPosition().y - 48));
+				}
+			}
+			
+			if(entity instanceof EntityPig){
+				if(overlaps){
+					Text.Small.FONT.draw(batch, "I'm a pig, oink!", entity.getPosition().x-5, entity.getPosition().y);
+					Text.Small.FONT.draw(batch, "Come close and tap E to get meat!", entity.getPosition().x-5, entity.getPosition().y - 16);
 				}
 			}
 		}
 	}
 	
-	public void checkForBreakableBlocks(SpriteBatch batch, TileType type){
+	public void checkForBreakableBlocks(SpriteBatch batch, TileType type, InventoryItem[] returnItems, TileType newType){
 		for(Tile tile : this.map.getTiles()){
 			if(tile.getTileType() == type){
-				Rectangle playerRectangle = new Rectangle(this.getPosition().x, this.getPosition().y, this.getCurrentSprite().getWidth() + 48 / 4, 1);
-				playerRectangle.x -= playerRectangle.getWidth() / 2;
+				Rectangle playerRectangle = new Rectangle(this.getPosition().x, this.getPosition().y, this.getCurrentSprite().getWidth() + 180 / 4, 30);
+				playerRectangle.x -= playerRectangle.getWidth() / 2 - 4;
+				playerRectangle.y -= 15;
 				
-				Rectangle playerRectangle2 = new Rectangle(this.getPosition().x, this.getPosition().y - this.getCurrentSprite().getHeight() / 2 - 6, 1, this.getCurrentSprite().getHeight() * 2.2f);
+				Rectangle playerRectangle2 = new Rectangle(this.getPosition().x, this.getPosition().y - this.getCurrentSprite().getHeight() / 2 - 6, 1, this.getCurrentSprite().getHeight() * 2.5f);
+				playerRectangle2.y -= 4;
 				/**ShapeRenderer shape = new ShapeRenderer();
 				shape.setProjectionMatrix(batch.getProjectionMatrix());
 				shape.setAutoShapeType(true);
@@ -199,19 +211,22 @@ public class EntityPlayer extends EntityLiving {
 				Game.shape.circle(this.getPosition().x, this.getPosition().y, 10);
 				Game.shape.rect(playerRectangle2.getX(), playerRectangle2.getY(), playerRectangle2.getWidth(), playerRectangle2.getHeight());
 				Game.shape.end();**/
-				System.out.println(Gdx.graphics.getFramesPerSecond());
+				//System.out.println(Gdx.graphics.getFramesPerSecond());
 				if(playerRectangle.overlaps(tile.getRectangle()) || playerRectangle2.overlaps(tile.getRectangle())){
 					tile.getCurrentSprite().setAlpha(0.9f);
 					this.dialogBreakTree.setPosition(this.getPosition().x - this.dialogBreakTree.getWidth() / 4, this.getPosition().y + this.getCurrentSprite().getHeight() * 1.2f);
 					this.dialogBreakTree.draw(batch);
 					
 					if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
-						tile.setNewType(TileType.Grass);
+						tile.setNewType(newType);
 						//inventory.addItem(new ItemLog(1), new Random().nextInt(3));
-						this.toolShackInventory.addItem(new ItemLog(1), MathUtils.random(1, 4));
+						for(InventoryItem item : returnItems){
+							this.toolShackInventory.addItem(item, item.getAmount());
+						}
+						/**this.toolShackInventory.addItem(new ItemLog(1), MathUtils.random(1, 4));
 						if(new Random().nextInt(3) == 2){
 							this.toolShackInventory.addItem(new ItemSeeds(1), 1);
-						}
+						}**/
 						
 						//tile.setNewType(TileType.Rock);
 						//this.map.spawnEntity(new EntityRock(this.map, new Vector2(tile.getPosition().x, tile.getPosition().y)));

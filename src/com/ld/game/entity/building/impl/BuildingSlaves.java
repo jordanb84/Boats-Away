@@ -1,7 +1,10 @@
 package com.ld.game.entity.building.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.ld.game.entity.building.EntityBuilding;
@@ -9,37 +12,49 @@ import com.ld.game.graphics.map.Map;
 import com.ld.game.item.Inventory;
 import com.ld.game.item.InventoryItem;
 import com.ld.game.item.ShopInventory;
+import com.ld.game.item.impl.ItemBread;
+import com.ld.game.item.impl.ItemFishCooked;
+import com.ld.game.item.impl.ItemLog;
+import com.ld.game.item.impl.ShopInventorySlaves;
 
 public class BuildingSlaves extends EntityBuilding {
 
-	public BuildingSlaves(String buildingName, String description, Map map, Vector2 position,
-			Inventory playerInventory) {
-		super(buildingName, description, map, position, playerInventory);
-		// TODO Auto-generated constructor stub
+	public BuildingSlaves(Map map, Vector2 position, Inventory playerInventory) {
+		super(map, "Slave Market", "Used to purchase slaves", position, playerInventory);
 	}
 
 	@Override
 	public List<InventoryItem> setupCost() {
-		// TODO Auto-generated method stub
-		return null;
+		List<InventoryItem> cost = new ArrayList<InventoryItem>();
+		
+		cost.add(new ItemFishCooked(15));
+		cost.add(new ItemLog(135));
+		cost.add(new ItemBread(3));
+		//cost.add(new ItemLog(1));
+		
+		return cost;
 	}
 
 	@Override
 	public void setupSprites() {
-		// TODO Auto-generated method stub
-		
+		this.getSprites().put("default", new Sprite(new Texture(Gdx.files.internal("assets/slavemarket2.png"))));
+		this.setCurrentSprite("default");
 	}
 
 	@Override
 	public Sprite setOutlinedSprite() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Sprite(new Texture(Gdx.files.internal("assets/slavemarketoutlined.png")));
 	}
 
 	@Override
 	public ShopInventory setupInventory(Map map, Inventory playerInventory) {
+		return new ShopInventorySlaves(map, playerInventory);
+	}
+
+	@Override
+	public void onPurchase() {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 }

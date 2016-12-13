@@ -10,7 +10,7 @@ import com.ld.game.item.InventoryItem;
 public class ItemSoldier extends InventoryItem {
 
 	public ItemSoldier(int amount) {
-		super("Soldier Troll", new Sprite(new Texture(Gdx.files.internal("assets/soldierdown.png"))), amount, "Click to place a soldier");
+		super("Soldier", new Sprite(new Texture(Gdx.files.internal("assets/soldieritem.png"))), amount, "Click to place a soldier");
 		
 	}
 

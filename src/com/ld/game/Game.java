@@ -1,11 +1,6 @@
 package com.ld.game;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.lwjgl.opengl.GL11;
-import org.xml.sax.SAXException;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -29,7 +24,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void create(){
 		this.camera = new OrthographicCamera();
-		this.camera.setToOrtho(false, 480, 320);
+		this.camera.setToOrtho(false, 416, 272);
 		
 		this.batch = new SpriteBatch();
 		

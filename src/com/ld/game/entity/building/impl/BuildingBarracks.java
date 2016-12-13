@@ -18,7 +18,7 @@ import com.ld.game.item.impl.ShopInventoryBarracks;
 public class BuildingBarracks extends EntityBuilding {
 
 	public BuildingBarracks(Map map, Vector2 position, Inventory playerInventory) {
-		super("Barracks", "Makes soldiers. ", map, position, playerInventory);
+		super(map, "Barracks", "Makes soldiers. ", position, playerInventory);
 		
 		//this.unlock();
 	}
@@ -47,6 +47,12 @@ public class BuildingBarracks extends EntityBuilding {
 		cost.add(new ItemLog(25));
 		
 		return cost;
+	}
+
+	@Override
+	public void onPurchase() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

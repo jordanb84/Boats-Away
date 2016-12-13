@@ -1,5 +1,7 @@
 package com.ld.game.tile;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,7 +11,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.ld.game.entity.Entity;
-import com.ld.game.item.Text;
+import com.ld.game.entity.EntityLiving;
+import com.ld.game.entity.impl.EntityPlayer;
+import com.ld.game.graphics.map.Map;
 
 public class Tile extends Entity {
 
@@ -19,7 +23,11 @@ public class Tile extends Entity {
 	
 	private boolean hovered;
 	
-	public Tile(TileType type, Vector2 position) {
+	private float requiredTime = 15;
+	
+	private Map map;
+	
+	public Tile(Map map, TileType type, Vector2 position) {
 		super(position);
 		this.setTileType(type);
 		
@@ -27,17 +35,24 @@ public class Tile extends Entity {
 		System.out.println("Loading tile " + "assets/" + type.mapFileName + ".png");
 		this.getSprites().put("default", new Sprite(new Texture(Gdx.files.internal("assets/" + type.mapFileName + ".png"))));
 		this.setCurrentSprite("default");
+		
+		this.requiredTime = (new Random().nextInt(60));
+		
+		this.map = map;
 	}
 
 	@Override
 	public void render(SpriteBatch batch){
-		super.render(batch);
 		if(this.getTileType().tileAction != null){
 			this.getTileType().tileAction.render(batch, this);
 		}
 		
-		if(this.tileType.tooltip != null && this.hovered){
-			Text.Small.FONT.draw(batch, this.tileType.tooltip, this.getPosition().x, this.getPosition().y);
+		if(this.getTileType().animation == null){
+			this.getCurrentSprite().setPosition(this.getPosition().x, this.getPosition().y);
+			this.getCurrentSprite().draw(batch);
+		}else{
+			this.getTileType().animation.update();
+			this.getTileType().animation.render(batch, this.getPosition());
 		}
 	}
 	
@@ -50,8 +65,36 @@ public class Tile extends Entity {
 		if(this.getTileType() == TileType.WheatPlanted){
 			this.cropGrowthElapsed += (1 * Gdx.graphics.getDeltaTime());
 			
-			if(this.cropGrowthElapsed >= 15){
+			if(this.cropGrowthElapsed >= this.requiredTime){
 				this.setNewType(TileType.WheatGrowing);
+				this.cropGrowthElapsed = 0;
+				this.requiredTime = (new Random().nextInt(60));
+			}
+		}
+		
+		if(this.getTileType() == TileType.Water){
+			this.cropGrowthElapsed += (1 * Gdx.graphics.getDeltaTime());
+			
+			if(this.cropGrowthElapsed >= this.requiredTime){
+				this.setNewType(TileType.WaterFish);
+				this.cropGrowthElapsed = 0;
+				this.requiredTime = (new Random().nextInt(60));
+			}
+		}
+		
+		if(this.getTileType() == TileType.Sapling){
+			this.cropGrowthElapsed += (1 * Gdx.graphics.getDeltaTime());
+			
+			if(this.cropGrowthElapsed >= this.requiredTime){
+				this.setNewType(TileType.Tree);
+				this.cropGrowthElapsed = 0;
+				this.requiredTime = (new Random().nextInt(60));
+				
+				for(EntityLiving entity : this.map.getEntities()){
+					if(entity instanceof EntityPlayer && entity.getRectangle().overlaps(this.getRectangle())){
+						this.setNewType(TileType.Sapling);
+					}
+				}
 			}
 		}
 		

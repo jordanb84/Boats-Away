@@ -19,7 +19,7 @@ import com.ld.game.item.impl.ShopInventoryMeatFactory;
 public class BuildingMeatFactory extends EntityBuilding {
 
 	public BuildingMeatFactory(Map map, Vector2 position, Inventory playerInventory) {
-		super("Meat Factory", "Processes meat for making soldiers", map, position, playerInventory);
+		super(map, "Meat Factory", "Processes meat for making soldiers", position, playerInventory);
 	}
 
 	@Override
@@ -27,6 +27,7 @@ public class BuildingMeatFactory extends EntityBuilding {
 		List<InventoryItem> cost = new ArrayList<InventoryItem>();
 		cost.add(new ItemRawPig(3));
 		cost.add(new ItemLog(30));
+		//cost.add(new ItemLog(1));
 		
 		return cost;
 	}
@@ -47,6 +48,12 @@ public class BuildingMeatFactory extends EntityBuilding {
 	public ShopInventory setupInventory(Map map, Inventory playerInventory) {
 		ShopInventory shopInventory = new ShopInventoryMeatFactory(map, playerInventory);
 		return shopInventory;
+	}
+
+	@Override
+	public void onPurchase() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

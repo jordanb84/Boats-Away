@@ -22,6 +22,8 @@ public class ActionWander extends EntityAction {
 	
 	private float speed;
 	
+	private Vector2 originalPosition;
+	
 	public ActionWander(float speed, EntityLiving entity, Vector2 range) {
 		super(entity);
 		this.destination = new Vector2(entity.getPosition().x, entity.getPosition().y);
@@ -29,6 +31,8 @@ public class ActionWander extends EntityAction {
 		this.range = range;
 		
 		this.speed = speed;
+		
+		this.originalPosition = new Vector2(entity.getPosition().x, entity.getPosition().y);
 	}
 
 	@Override
@@ -45,6 +49,10 @@ public class ActionWander extends EntityAction {
 		
 		if(this.getEntity().tileAt(this.destination)){
 			this.newDestination();
+		}
+		
+		if(this.getEntity().getPosition().x - this.originalPosition.x >= this.range.x || this.getEntity().getPosition().y - this.originalPosition.y >= this.range.y){
+			this.destination = (new Vector2(this.originalPosition.x, this.originalPosition.y));
 		}
 		
 		return true;

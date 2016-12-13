@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class ToolShackInventory extends Inventory {
 
 	public ToolShackInventory(Vector2 position) {
-		super(5);
+		super(15);
 		this.position = position;
 	}
 	

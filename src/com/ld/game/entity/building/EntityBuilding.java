@@ -44,7 +44,9 @@ public abstract class EntityBuilding extends EntityLiving {
 	private boolean movingFlashingDown = true;
 	private float transparency = 1f;
 	
-	public EntityBuilding(String buildingName, String description, Map map, Vector2 position, Inventory playerInventory) {
+	private Map map;
+	
+	public EntityBuilding(Map map, String buildingName, String description, Vector2 position, Inventory playerInventory) {
 		super(map, position);
 		this.setShopInventory(this.setupInventory(map, playerInventory));
 		this.setBuildingName(buildingName);
@@ -61,6 +63,8 @@ public abstract class EntityBuilding extends EntityLiving {
 		this.playerInventory = playerInventory;
 		
 		this.pointerArrowSprite = new Sprite(new Texture(Gdx.files.internal("assets/dialog_pointer.png")));
+		
+		this.map = map;
 	}
 	
 	public abstract List<InventoryItem> setupCost(); 
@@ -68,6 +72,8 @@ public abstract class EntityBuilding extends EntityLiving {
 	public abstract void setupSprites();
 	
 	public abstract Sprite setOutlinedSprite();
+	
+	public abstract void onPurchase();
 	
 	public void setupBoxes(){
 		int shopBoxIndex = 0;
@@ -83,17 +89,20 @@ public abstract class EntityBuilding extends EntityLiving {
 		if(!this.unlocked){
 			if(this.isHovered()){
 				this.getCurrentSprite().setAlpha(0.5f);
-				Text.Small.FONT.draw(batch, this.buildingName, this.getPosition().x, this.getPosition().y + this.getCurrentSprite().getHeight() * 1.2f);
-				Text.Small.FONT.draw(batch, this.description, this.getPosition().x, this.getPosition().y);
-				Text.Small.FONT.draw(batch, "Click to purchase for: " + this.getPrice(), this.getPosition().x, this.getPosition().y - 15);
+				this.map.drawText(this.buildingName, new Vector2(this.getPosition().x + this.textOffsetX(), this.getPosition().y + this.textOffsetY() + this.getCurrentSprite().getHeight() * 1.5f));
+				this.map.drawText(this.description, new Vector2(this.getPosition().x + this.textOffsetX(), this.getPosition().y + this.textOffsetY()));
+				this.map.drawText("Click to purchase for: " + this.getPrice(), new Vector2(this.getPosition().x + this.textOffsetX(), this.getPosition().y - 15 + this.textOffsetY()));
 				
 				if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
 					if(this.playerInventory.hasResources(this.getCost())){
-						for(InventoryItem item : this.getCost()){
-							this.playerInventory.removeItem(item, item.getAmount());
+						this.onPurchase();
+						if(this.canPurchase()){
+							for(InventoryItem item : this.getCost()){
+								this.playerInventory.removeItem(item, item.getAmount());
+							}
+							
+							this.unlock();
 						}
-						
-						this.unlock();
 					}
 				}
 			}else{
@@ -105,12 +114,12 @@ public abstract class EntityBuilding extends EntityLiving {
 				this.getCurrentSprite().setAlpha(this.transparency);
 				if(this.movingFlashingDown){
 					this.transparency -= (1 * Gdx.graphics.getDeltaTime() / 3);
-					if(this.transparency <= 0.5f){
+					if(this.transparency <= 0.2f){
 						this.movingFlashingDown = false;
 					}
 				}else{
 					this.transparency += (1 * Gdx.graphics.getDeltaTime() / 3);
-					if(this.transparency >= 0.9f){
+					if(this.transparency >= 0.95f){
 						this.movingFlashingDown = true;
 					}
 				}
@@ -140,6 +149,10 @@ public abstract class EntityBuilding extends EntityLiving {
 		//System.out.println("Selected: " + this.isSelected());
 	}
 
+	public boolean canPurchase(){
+		return true;
+	}
+	
 	@Override
 	public void update(OrthographicCamera camera){
 		Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -240,6 +253,14 @@ public abstract class EntityBuilding extends EntityLiving {
 		}
 		
 		return costText;
+	}
+	
+	public int textOffsetX(){
+		return 0;
+	}
+	
+	public int textOffsetY(){
+		return 0;
 	}
 
 }

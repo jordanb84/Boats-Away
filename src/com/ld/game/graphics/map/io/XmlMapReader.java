@@ -1,6 +1,5 @@
 package com.ld.game.graphics.map.io;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +13,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.badlogic.gdx.files.FileHandle;
+
 public class XmlMapReader {
 
 	public XmlMapReader(){
 		
 	}
 	
-	public List<LoadedTileData> getTilesFromFile(File file) throws SAXException, IOException, ParserConfigurationException{
+	public List<LoadedTileData> getTilesFromFile(FileHandle file) throws SAXException, IOException, ParserConfigurationException{
 		List<LoadedTileData> loadedTileMap = new ArrayList<LoadedTileData>();
 		
 		Document document = (XmlUtils.getDocument(file));

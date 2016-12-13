@@ -1,5 +1,7 @@
 package com.ld.game.item.impl;
 
+import java.util.Random;
+
 import com.badlogic.gdx.math.Vector2;
 import com.ld.game.entity.impl.EntitySoldier;
 import com.ld.game.graphics.map.Map;
@@ -20,7 +22,21 @@ public class ShopBoxSoldier extends ShopBox {
 
 	@Override
 	public void use() {
-		this.getMap().spawnEntity(new EntitySoldier(this.getMap(), new Vector2(100, 100)));
+		
+		float randomX = (0);
+		float randomY = (0);
+		
+		Random random = new Random();
+		
+		if(random.nextBoolean()){
+			randomX = (random.nextInt(16));
+			randomY = (random.nextInt(16));
+		}else{
+			randomX = (-random.nextInt(16));
+			randomY = (-random.nextInt(16));
+		}
+		
+		this.getMap().spawnEntity(new EntitySoldier(this.getMap(), new Vector2(32 + randomX, 144 + randomY)));
 	}
 	
 }

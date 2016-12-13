@@ -30,8 +30,8 @@ public class ShopInventoryMeatFactory extends ShopInventory {
 	public List<ShopBox> setupBoxes(Map map, Inventory playerInventory) {
 		List<ShopBox> shopBoxes = new ArrayList<ShopBox>();
 		
-		shopBoxes.add(new ShopBoxBacon(map, playerInventory, new InventoryItem[] {new ItemRawPig(5)}, this, new ItemBacon(1)));
-		shopBoxes.add(new ShopBoxBread(map, playerInventory, new InventoryItem[] {new ItemWheat(8)}, this, new ItemBread(1)));
+		shopBoxes.add(new ShopBoxBacon(map, playerInventory, new InventoryItem[] {new ItemRawPig(1)}, this, new ItemBacon(1)));
+		shopBoxes.add(new ShopBoxBread(map, playerInventory, new InventoryItem[] {new ItemWheat(1)}, this, new ItemBread(1)));
 		
 		return shopBoxes;
 	}
