@@ -4,6 +4,7 @@ You wake up trapped on a strange island, and must build an army to attack the na
 
 Your goal: Build 5 soldiers and purchase the bridge (hover it). This allows you to take the boat and finally escape.
 
+( Warning: Terrible code. That's the fun of Ludum Dare ;) )
 
 Music and art by "Groovy Unicyclist" - Thank you! (https://soundcloud.com/groovyuni/)
 - Thanks to everyone on the LD Discord: It was great! We'll be there next LD too.
